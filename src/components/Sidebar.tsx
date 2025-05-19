@@ -25,21 +25,21 @@ const Sidebar: React.FC<SidebarProps> = ({ onHowToClick }) => (
         Home
       </Link>
 
-      <Link
+      {/* <Link
         to="/categories"
         className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
       >
         <FaThList className="mr-3 w-7 h-7" />
         Categories
-      </Link>
+      </Link> */}
 
-      <Link
+      {/* <Link
         to="/supermarkets"
         className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
       >
         <FaStore className="mr-3 w-7 h-7" />
         Supermarkets
-      </Link>
+      </Link> */}
 
       {/* “How to Create Your Account” now opens the modal */}
       <button

@@ -76,7 +76,7 @@ export default function Home() {
         <section className="bg-gray-50 py-12 px-6 rounded-lg text-center max-w-3xl mx-auto">
           <h2 className="text-xl font-semibold mb-4">About Kolik</h2>
           <p className="text-gray-600">
-            We are a student-built, privacy-focused tool to help Czech shoppers make smart choices 
+            We are a student-built, privacy-focused tool to help Czech shoppers make smart choices
             without tracking or ads.
           </p>
         </section>
@@ -84,15 +84,65 @@ export default function Home() {
 
       {/* Modal for “How to Create Your Account” */}
       <Modal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)}>
-        <h1 className="text-3xl font-bold mb-4">How to Create Your Account</h1>
-        <ol className="list-decimal list-inside space-y-2 text-gray-700">
-          <li>
-            Click the <span className="font-semibold">Register</span> button in the top-right.
-          </li>
-          <li>Enter your email and choose a strong password.</li>
-          <li>Check your inbox for our confirmation link and click it.</li>
-          <li>Log in with your new credentials and start comparing!</li>
-        </ol>
+        <div className="p-6 max-w-xl mx-auto space-y-6">
+          <h1 className="text-2xl font-bold">How to Create Your Account</h1>
+
+          {/* Step 1 */}
+          <div>
+            <h2 className="font-semibold">Step 1: Register ✅</h2>
+            <ul className="list-decimal list-inside ml-4 space-y-1">
+              <li>Go to the registration page.</li>
+              <li>Fill in your name, email address, and password.</li>
+              <li>Agree to the Terms and Privacy Policy.</li>
+              <li>Click “Register.”</li>
+            </ul>
+          </div>
+
+          {/* Step 2 */}
+          <div>
+            <h2 className="font-semibold">Step 2: Verify Your Email</h2>
+            <ul className="list-decimal list-inside ml-4 space-y-1">
+              <li>Check your email inbox.</li>
+              <li>Open the message from Kolik and click “Verify Email.”</li>
+              <li>This confirms your email address is real.</li>
+            </ul>
+          </div>
+
+          {/* Step 3 */}
+          <div>
+            <h2 className="font-semibold">Step 3: Login to Your Account ✅</h2>
+            <ul className="list-decimal list-inside ml-4 space-y-1">
+              <li>After verifying, go to the Login page.</li>
+              <li>Enter your email and password.</li>
+            </ul>
+          </div>
+
+          {/* Step 4 */}
+          <div>
+            <h2 className="font-semibold">Step 4: Set Up Two-Factor Authentication (MFA) ✅</h2>
+            <ul className="list-decimal list-inside ml-4 space-y-1">
+              <li>Upon first login, you’ll see a QR code.</li>
+              <li>Scan it with Google/Microsoft Authenticator or another TOTP app.</li>
+              <li>Enter the 6-digit code from your app to confirm.</li>
+              <li className="italic text-sm text-gray-500">
+                Tip: If you don’t have an authenticator app, download one free from your app store.
+              </li>
+            </ul>
+          </div>
+
+          {/* Step 5 */}
+          <div>
+            <h2 className="font-semibold">Step 5: Login with MFA ✅</h2>
+            <ul className="list-decimal list-inside ml-4 space-y-1">
+              <li>On future logins, enter your email & password.</li>
+              <li>Then enter the 6-digit code from your authenticator app.</li>
+            </ul>
+          </div>
+
+          <p className="mt-4 font-semibold">
+            Done! You now have a fully secured Kolik account. ✅
+          </p>
+        </div>
       </Modal>
     </div>
   )
