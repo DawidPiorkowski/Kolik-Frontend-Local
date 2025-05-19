@@ -13,6 +13,7 @@ export default function Home() {
 
       {/* Main content on the right */}
       <main className="flex-1 space-y-24 py-16 px-4 md:px-8 lg:px-16">
+        
         {/* HERO */}
         <section className="text-center space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold">
@@ -27,11 +28,31 @@ export default function Home() {
           >
             Start Comparing
           </button>
-          <div className="flex justify-center space-x-6 text-sm text-gray-500">
-            <span>Billa</span>
-            <span>Tesco</span>
-            <span>Albert</span>
-          </div>
+
+          {/* LOGOS */}
+          <section className="flex flex-wrap justify-center items-center gap-8 pt-6">
+            <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+              <img
+                src="/logos/billalogo.png"
+                alt="Billa"
+                className="h-full object-contain scale-[1.4]"
+              />
+            </div>
+            <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+              <img
+                src="/logos/tesco logo.jpeg"
+                alt="Tesco"
+                className="h-full object-contain scale-[1.6]"
+              />
+            </div>
+            <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+              <img
+                src="/logos/Albert_Logo.png"
+                alt="Albert"
+                className="h-full object-contain scale-[0.9]"
+              />
+            </div>
+          </section>
         </section>
 
         {/* HOW IT WORKS */}
