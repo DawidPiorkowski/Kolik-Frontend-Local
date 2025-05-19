@@ -10,7 +10,13 @@ import {
   FaEnvelope,
 } from 'react-icons/fa'
 
-const Sidebar: React.FC = () => (
+// 1) Define the props interface:
+interface SidebarProps {
+  onHowToClick: () => void
+}
+
+// 2) Tell React/TS that Sidebar takes SidebarProps:
+const Sidebar: React.FC<SidebarProps> = ({ onHowToClick }) => (
   <aside className="w-64 h-screen bg-white border-r p-6">
     <nav className="flex flex-col">
       <Link
@@ -37,13 +43,14 @@ const Sidebar: React.FC = () => (
         Supermarkets
       </Link>
 
-      <Link
-        to="/how-to-create-account"
-        className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
+      {/* 3) Use a <button> so we can call the onHowToClick handler */}
+      <button
+        onClick={onHowToClick}
+        className="flex items-center text-2xl font-medium py-3 hover:text-blue-600 text-left focus:outline-none"
       >
         <FaUserPlus className="mr-3 w-7 h-7" />
         How to Create Your Account
-      </Link>
+      </button>
 
       <Link
         to="/account-settings"

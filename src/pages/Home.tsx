@@ -1,19 +1,20 @@
 // src/pages/Home.tsx
-import React from "react"
+import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Sidebar from "../components/Sidebar"
+import Modal from "../components/Modal"
 
 export default function Home() {
   const navigate = useNavigate()
+  const [isHowToOpen, setIsHowToOpen] = useState(false)
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar on the left */}
-      <Sidebar />
+      {/* Sidebar with popup trigger */}
+      <Sidebar onHowToClick={() => setIsHowToOpen(true)} />
 
-      {/* Main content on the right */}
+      {/* Main content */}
       <main className="flex-1 space-y-24 py-16 px-4 md:px-8 lg:px-16">
-        
         {/* HERO */}
         <section className="text-center space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold">
@@ -28,31 +29,31 @@ export default function Home() {
           >
             Start Comparing
           </button>
+        </section>
 
-          {/* LOGOS */}
-          <section className="flex flex-wrap justify-center items-center gap-8 pt-6">
-            <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
-              <img
-                src="/logos/billalogo.png"
-                alt="Billa"
-                className="h-full object-contain scale-[1.4]"
-              />
-            </div>
-            <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
-              <img
-                src="/logos/tesco logo.jpeg"
-                alt="Tesco"
-                className="h-full object-contain scale-[1.6]"
-              />
-            </div>
-            <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
-              <img
-                src="/logos/Albert_Logo.png"
-                alt="Albert"
-                className="h-full object-contain scale-[0.9]"
-              />
-            </div>
-          </section>
+        {/* LOGOS */}
+        <section className="flex flex-wrap justify-center items-center gap-8 pt-6">
+          <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+            <img
+              src="/logos/billalogo.png"
+              alt="Billa"
+              className="h-full object-contain scale-[1.4]"
+            />
+          </div>
+          <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+            <img
+              src="/logos/tesco logo.jpeg"
+              alt="Tesco"
+              className="h-full object-contain scale-[1.6]"
+            />
+          </div>
+          <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+            <img
+              src="/logos/Albert_Logo.png"
+              alt="Albert"
+              className="h-full object-contain scale-[0.9]"
+            />
+          </div>
         </section>
 
         {/* HOW IT WORKS */}
@@ -80,6 +81,19 @@ export default function Home() {
           </p>
         </section>
       </main>
+
+      {/* Modal for “How to Create Your Account” */}
+      <Modal isOpen={isHowToOpen} onClose={() => setIsHowToOpen(false)}>
+        <h1 className="text-3xl font-bold mb-4">How to Create Your Account</h1>
+        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+          <li>
+            Click the <span className="font-semibold">Register</span> button in the top-right.
+          </li>
+          <li>Enter your email and choose a strong password.</li>
+          <li>Check your inbox for our confirmation link and click it.</li>
+          <li>Log in with your new credentials and start comparing!</li>
+        </ol>
+      </Modal>
     </div>
   )
 }
