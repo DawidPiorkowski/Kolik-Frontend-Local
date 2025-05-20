@@ -1,29 +1,28 @@
 // src/services/api.ts
+import { API_BASE, handleError, fetchCsrfToken } from './config'
 
-const API_BASE = 'http://localhost:8000/api'
+// const API_BASE = 'http://localhost:8000/api'
 
 /**
  * Read a cookie value by name.
  */
-function getCookie(name: string): string | null {
-  const match = document.cookie.match(
-    new RegExp('(^|; )' + name + '=([^;]*)')
-  )
-  return match ? decodeURIComponent(match[2]) : null
-}
+
+// function getCookie(name: string): string | null {
+//   const match = document.cookie.match(
+//     new RegExp('(^|; )' + name + '=([^;]*)')
+//   )
+//   return match ? decodeURIComponent(match[2]) : null
+// }
 
 /**
  * Fetch the CSRF endpoint to set the `csrftoken` cookie,
  * then return its value.
  */
-async function fetchCsrfToken(): Promise<string> {
-  await fetch(`${API_BASE}/auth/csrf/`, {
-    credentials: 'include',
-  })
-  const token = getCookie('csrftoken')
-  if (!token) throw new Error('Could not fetch CSRF token')
-  return token
-}
+
+// export async function fetchCsrfToken(): Promise<string> {
+//   // 1) Fetch to set the cookiehandleError
+//   return token
+// }
 
 /**
  * Only parse JSON if the response has a JSON content-type.
@@ -39,19 +38,19 @@ async function parseJsonIfAny(res: Response) {
 /**
  * Extract and throw a useful error message from a Response.
  */
-async function handleError(res: Response): Promise<never> {
-  let msg = res.statusText
-  try {
-    const data = await res.json()
-    msg = data.detail ||
-          data.error ||
-          data.non_field_errors?.join(' ') ||
-          JSON.stringify(data)
-  } catch {
-    msg = await res.text()
-  }
-  throw new Error(msg || `HTTP ${res.status}`)
-}
+// async function handleError(res: Response): Promise<never> {
+//   let msg = res.statusText
+//   try {
+//     const data = await res.json()
+//     msg = data.detail ||
+//           data.error ||
+//           data.non_field_errors?.join(' ') ||
+//           JSON.stringify(data)
+//   } catch {
+//     msg = await res.text()
+//   }
+//   throw new Error(msg || `HTTP ${res.status}`)
+// }
 
 /*======================================
   AUTH (Session-Based w/ CSRF)
@@ -137,34 +136,55 @@ export async function getProfile() {
 }
 
 /** Update profile fields */
-export async function updateProfile(data: {
-  first_name?: string
-  last_name?: string
-}) {
-  const res = await fetch(`${API_BASE}/auth/profile/`, {
-    method: 'PUT',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) await handleError(res)
-  return res.json()
-}
+export async function updateProfile(data: { name: string })
+{
+   // 1) ensure we have a fresh CSRF cookie & token
+   const csrf = await fetchCsrfToken()
+
+   // 2) PATCH only the fields you send
+   const res = await fetch(`${API_BASE}/auth/profile/`, {
+     method: 'PATCH',
+     credentials: 'include',
+     headers: {
+       'Content-Type':  'application/json',
+       'X-CSRFToken':    csrf,
+     },
+     body: JSON.stringify(data),
+   })
+
+   if (!res.ok) await handleError(res)
+   return res.json()
+ }
 
 /** Change password (while logged in) */
-export async function changePassword(
-  old_password: string,
+export interface ChangePasswordPayload {
+  current_password: string
   new_password: string
-) {
-  const res = await fetch(`${API_BASE}/auth/profile/change-password/`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ old_password, new_password }),
-  })
-  if (!res.ok) await handleError(res)
-  return res.json()
+  confirm_new_password: string
+  mfa_code: string
 }
+
+/**
+ * Change the logged-in user’s password.
+ */
+ export async function changePassword(data: ChangePasswordPayload) {
+   // 1) grab CSRF token
+   const csrf = await fetchCsrfToken()
+
+   // 2) send it back in the header
+   const res = await fetch(`${API_BASE}/auth/profile/change-password/`, {
+     method: 'PATCH',
+     credentials: 'include',
+     headers: {
+       'Content-Type':  'application/json',
+       'X-CSRFToken':    csrf,
+     },
+     body: JSON.stringify(data),
+   })
+
+   if (!res.ok) await handleError(res)
+   return res.json()
+ }
 
 /** Request a password-reset email */
 export async function requestPasswordReset(email: string) {
@@ -193,23 +213,39 @@ export async function resetPassword(
 }
 
 /** Request email change */
-export async function requestEmailChange(new_email: string) {
+export async function requestEmailChange(payload: {
+  current_password: string
+  new_email:        string
+  mfa_code:         string
+}) {
+  // 1) Grab CSRF token
+  const csrf = await fetchCsrfToken()
+
+  // 2) Send all three fields together
   const res = await fetch(`${API_BASE}/auth/profile/request-email-change/`, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ new_email }),
+    headers: {
+      'Content-Type':  'application/json',
+      'X-CSRFToken':    csrf,
+    },
+    body: JSON.stringify(payload),
   })
+
   if (!res.ok) await handleError(res)
   return res.json()
 }
 
 /** Confirm email change */
 export async function confirmEmailChange(token: string) {
+  const csrf = await fetchCsrfToken()
   const res = await fetch(`${API_BASE}/auth/profile/confirm-email-change/`, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type':  'application/json',
+      'X-CSRFToken':    csrf,
+    },
     body: JSON.stringify({ token }),
   })
   if (!res.ok) await handleError(res)
@@ -343,13 +379,17 @@ export async function getShoppingList() {
 /** Add an item: { product_id, quantity, variant_id? } */
 export async function addToShoppingList(item: {
   product_id: number
-  quantity: number
+  quantity:   number
   variant_id?: number
 }) {
+  const csrf = await fetchCsrfToken()
   const res = await fetch(`${API_BASE}/shopping-list/add/`, {
-    method: 'POST',
+    method:      'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken':   csrf,
+    },
     body: JSON.stringify(item),
   })
   if (!res.ok) await handleError(res)
@@ -358,10 +398,14 @@ export async function addToShoppingList(item: {
 
 /** Remove an item: { product_id } */
 export async function removeFromShoppingList(product_id: number) {
+  const csrf = await fetchCsrfToken()
   const res = await fetch(`${API_BASE}/shopping-list/remove/`, {
-    method: 'POST',
+    method:      'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken':   csrf,
+    },
     body: JSON.stringify({ product_id }),
   })
   if (!res.ok) await handleError(res)
@@ -370,14 +414,17 @@ export async function removeFromShoppingList(product_id: number) {
 
 /** Clear the cart (DELETE) */
 export async function clearShoppingList() {
+  const csrf = await fetchCsrfToken()
   const res = await fetch(`${API_BASE}/shopping-list/clear/`, {
-    method: 'DELETE',
+    method:      'DELETE',
     credentials: 'include',
+    headers: {
+      'X-CSRFToken': csrf,
+    },
   })
   if (!res.ok) await handleError(res)
   return {}
 }
-
 /** Compare your cart across supermarkets */
 export async function compareShoppingList() {
   const res = await fetch(`${API_BASE}/shopping-list/compare/`, {

@@ -1,22 +1,29 @@
 // src/App.tsx
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-// import { AuthProvider } from './contexts/AuthContext'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import VerifyEmail from './pages/VerifyEmail'
-import PasswordResetRequest from './pages/PasswordResetRequest'
-import PasswordResetConfirm from './pages/PasswordResetConfirm'
-import MfaSetup from './pages/MfaSetup'
-import MfaLogin from './pages/MfaLogin'
-import Products from './pages/Products'
-import ProductDetail from './pages/ProductDetail'
-import ShoppingList from './pages/ShoppingList'
-import ProtectedTest from './pages/ProtectedTest'
+
+import Home                  from './pages/Home'
+import Login                 from './pages/Login'
+import Register              from './pages/Register'
+import VerifyEmail           from './pages/VerifyEmail'
+import PasswordResetRequest  from './pages/PasswordResetRequest'
+import PasswordResetConfirm  from './pages/PasswordResetConfirm'
+import MfaSetup              from './pages/MfaSetup'
+import MfaLogin              from './pages/MfaLogin'
+import Products              from './pages/Products'
+import ProductDetail         from './pages/ProductDetail'
+import ShoppingList          from './pages/ShoppingList'
+import ProtectedTest         from './pages/ProtectedTest'
+
+// ← NEW imports:
+import AccountSettings       from './pages/AccountSettings'
+import ChangePassword        from './pages/ChangePassword'
+import ChangeEmail           from './pages/ChangeEmail'
+import ConfirmEmail          from './pages/ConfirmEmail'
+
 import ProtectedRoute from './components/ProtectedRoute'
-import Navbar from './components/Navbar'
-import Layout from './components/Layout'
+import Navbar         from './components/Navbar'
+import Layout         from './components/Layout'
 
 export default function App() {
   return (
@@ -24,45 +31,65 @@ export default function App() {
       <Navbar />
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
+          {/* public */}
+          <Route path="/"                  element={<Home />} />
+          <Route path="/register"          element={<Register />} />
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
-          <Route path="/password-reset" element={<PasswordResetRequest />} />
+          <Route path="/password-reset"    element={<PasswordResetRequest />} />
           <Route path="/password-reset/confirm" element={<PasswordResetConfirm />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/mfa-setup" element={<MfaSetup />} />
-          <Route path="/mfa-login" element={<MfaLogin />} />
+          <Route path="/login"             element={<Login />} />
+          <Route path="/mfa-setup"         element={<MfaSetup />} />
+          <Route path="/mfa-login"         element={<MfaLogin />} />
 
-          {/* Protected routes */}
+          {/* protected */}
           <Route
             path="/products"
-            element={
-              <ProtectedRoute>
-                <Products />
-              </ProtectedRoute>
-            }
+            element={<ProtectedRoute><Products /></ProtectedRoute>}
           />
           <Route
             path="/products/:id"
-            element={
-              <ProtectedRoute>
-                <ProductDetail />
-              </ProtectedRoute>
-            }
+            element={<ProtectedRoute><ProductDetail /></ProtectedRoute>}
           />
           <Route
             path="/shopping-list"
+            element={<ProtectedRoute><ShoppingList /></ProtectedRoute>}
+          />
+          <Route
+            path="/protected"
+            element={<ProtectedRoute><ProtectedTest /></ProtectedRoute>}
+          />
+
+          {/* ── ACCOUNT SETTINGS FLOW ── */}
+          <Route
+            path="/account"
             element={
               <ProtectedRoute>
-                <ShoppingList />
+                <AccountSettings />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/protected"
+            path="/account/change-password"
             element={
               <ProtectedRoute>
-                <ProtectedTest />
+                <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/change-email"
+            element={
+              <ProtectedRoute>
+                <ChangeEmail />
+              </ProtectedRoute>
+            }
+          />
+          {/* this one reads ?token=… from the URL, no path‐param needed */}
+          <Route
+            path="/account/confirm-email"
+            element={
+              <ProtectedRoute>
+                <ConfirmEmail />
               </ProtectedRoute>
             }
           />

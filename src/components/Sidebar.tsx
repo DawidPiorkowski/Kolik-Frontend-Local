@@ -51,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onHowToClick }) => (
       </button>
 
       <Link
-        to="/account-settings"
+        to="/account"
         className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
       >
         <FaUserCog className="mr-3 w-7 h-7" />
