@@ -32,14 +32,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
-  // 🔥 NEW: on mount, try to rehydrate from the session cookie
+  // Try to rehydrate user session on mount
   useEffect(() => {
     (async () => {
       try {
         const profile = await api.getProfile()
         setUser(profile)
-      } catch (err) {
-        // not logged in (or session expired)
+      } catch {
         setUser(null)
       } finally {
         setLoading(false)
@@ -47,7 +46,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })()
   }, [])
 
-  // … your existing login, mfaLogin, logout implementations …
   const login = async (email: string, password: string) => {
     setLoading(true)
     setError(null)
@@ -68,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     }
   }
+
   const mfaLogin = async (email: string, code: string) => {
     setLoading(true)
     setError(null)
@@ -75,7 +74,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await api.mfaLogin(email, code)
       const profile = await api.getProfile()
       setUser(profile) 
-      // Redirect to the Home page
       navigate('/', { replace: true })
     } catch (err: any) {
       setError(err.message)
@@ -83,11 +81,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     }
   }
+
+  // <— Correct logout implementation
   const logout = async () => {
-    await api.logout()
-    setUser(null)
-    // Brings you to the Home page
-    navigate('/', { replace: true })
+    try {
+      await api.logout()
+    } catch (err) {
+      console.warn('Logout API failed (ignored):', err)
+    } finally {
+      setUser(null)
+    }
   }
 
   return (

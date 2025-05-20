@@ -22,6 +22,8 @@ const ChangePassword: React.FC = () => {
     }
 
     setLoading(true)
+
+    // 1) First, try changing the password
     try {
       await changePassword({
         current_password: currentPassword,
@@ -29,20 +31,30 @@ const ChangePassword: React.FC = () => {
         confirm_new_password: confirmPassword,
         mfa_code: mfaCode,
       })
-
-      alert('Password changed successfully. Please log in with your new credentials.')
-      await logout()
-      navigate('/login')
     } catch (err: any) {
-      console.error(err)
+      console.error('Password change error:', err)
       const msg =
         err.response?.data?.detail ||
         'Failed to change password. Please try again.'
       alert(msg)
-    } finally {
       setLoading(false)
+      return
     }
-  }
+
+    // 2) On success, notify user
+    alert('Password changed successfully. Please log in with your new credentials.')
+
+    // 3) Then log out (errors here are non-blocking)
+    try {
+      await logout()
+    } catch (warnErr) {
+      console.warn('Logout after password change failed (ignored):', warnErr)
+    }
+
+    // 4) Redirect and clear loading
+    navigate('/login')
+    setLoading(false)
+  } // end handleSubmit
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">

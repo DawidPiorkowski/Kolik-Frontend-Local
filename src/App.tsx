@@ -15,7 +15,7 @@ import ProductDetail         from './pages/ProductDetail'
 import ShoppingList          from './pages/ShoppingList'
 import ProtectedTest         from './pages/ProtectedTest'
 
-// ← NEW imports:
+// Profile 
 import AccountSettings       from './pages/AccountSettings'
 import ChangePassword        from './pages/ChangePassword'
 import ChangeEmail           from './pages/ChangeEmail'
@@ -86,7 +86,7 @@ export default function App() {
           />
           {/* this one reads ?token=… from the URL, no path‐param needed */}
           <Route
-            path="/account/confirm-email"
+            path="/account/confirm-email-change/:token"
             element={
               <ProtectedRoute>
                 <ConfirmEmail />

@@ -1,23 +1,29 @@
+// src/pages/ConfirmEmail.tsx
 import React, { useEffect, useState } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { confirmEmailChange } from '../services/api'
 
 const ConfirmEmail: React.FC = () => {
+  // grab the path‐param
+  const { token } = useParams<{ token: string }>()
+  // grab the subid from ?subid=…
   const [searchParams] = useSearchParams()
-  const token = searchParams.get('token') || ''
+  const subid = searchParams.get('subid') || ''
+
   const [status, setStatus] = useState<'loading'|'success'|'error'>('loading')
   const [message, setMessage] = useState<string>('')
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!token) {
+    if (!token || !subid) {
       setStatus('error')
-      setMessage('No confirmation token provided.')
+      setMessage('Invalid confirmation link.')
       return
     }
 
-    confirmEmailChange(token)
-      .then(data => {
+    // pass BOTH values to your API helper
+    confirmEmailChange({ token, subid })
+      .then(() => {
         setStatus('success')
         setMessage('Your email address has been updated! You can now log in again.')
       })
@@ -25,11 +31,12 @@ const ConfirmEmail: React.FC = () => {
         setStatus('error')
         setMessage(err.message || 'Failed to confirm email change.')
       })
-  }, [token])
+  }, [token, subid])
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded shadow text-center">
       {status === 'loading' && <p>Confirming your new email…</p>}
+
       {(status === 'success' || status === 'error') && (
         <>
           <p className={status === 'success' ? 'text-green-700' : 'text-red-700'}>

@@ -237,17 +237,27 @@ export async function requestEmailChange(payload: {
 }
 
 /** Confirm email change */
-export async function confirmEmailChange(token: string) {
+export interface ConfirmEmailChangePayload {
+  token: string
+  subid: string
+}
+
+/** Confirm email change */
+export async function confirmEmailChange({
+  token,
+  subid,
+}: ConfirmEmailChangePayload) {
   const csrf = await fetchCsrfToken()
   const res = await fetch(`${API_BASE}/auth/profile/confirm-email-change/`, {
     method: 'POST',
     credentials: 'include',
     headers: {
-      'Content-Type':  'application/json',
-      'X-CSRFToken':    csrf,
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrf,
     },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify({ token, subid }),
   })
+
   if (!res.ok) await handleError(res)
   return res.json()
 }
