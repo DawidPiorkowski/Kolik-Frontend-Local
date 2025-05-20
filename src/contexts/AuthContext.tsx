@@ -74,8 +74,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await api.mfaLogin(email, code)
       const profile = await api.getProfile()
-      setUser(profile)
-      navigate('/products', { replace: true })
+      setUser(profile) 
+      // Redirect to the Home page
+      navigate('/', { replace: true })
     } catch (err: any) {
       setError(err.message)
     } finally {
