@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { confirmEmailChange } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
 const ConfirmEmail: React.FC = () => {
   // grab the path‐param
@@ -10,9 +11,10 @@ const ConfirmEmail: React.FC = () => {
   const [searchParams] = useSearchParams()
   const subid = searchParams.get('subid') || ''
 
-  const [status, setStatus] = useState<'loading'|'success'|'error'>('loading')
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
   const [message, setMessage] = useState<string>('')
   const navigate = useNavigate()
+  const { logout } = useAuth()
 
   useEffect(() => {
     if (!token || !subid) {
@@ -21,17 +23,24 @@ const ConfirmEmail: React.FC = () => {
       return
     }
 
-    // pass BOTH values to your API helper
-    confirmEmailChange({ token, subid })
-      .then(() => {
+    ;(async () => {
+      try {
+        // 1) confirm email change on the server
+        await confirmEmailChange({ token, subid })
+
+        // 2) clear any existing auth state immediately
+        await logout()
+
+        // 3) show the success UI
         setStatus('success')
-        setMessage('Your email address has been updated! You can now log in again.')
-      })
-      .catch(err => {
+        setMessage('Your email address has been updated! Please log in again.')
+
+      } catch (err: any) {
         setStatus('error')
         setMessage(err.message || 'Failed to confirm email change.')
-      })
-  }, [token, subid])
+      }
+    })()
+  }, [token, subid, logout])
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded shadow text-center">

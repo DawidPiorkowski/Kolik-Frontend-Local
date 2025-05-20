@@ -69,10 +69,42 @@ export async function register(
   const res = await fetch(`${API_BASE}/auth/register/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',              // include cookies
     body: JSON.stringify({ name, email, password, confirm_password }),
   })
-  if (!res.ok) await handleError(res)
-  return res.json()
+
+  // always try to parse JSON so we can inspect errors
+  let data: any = {}
+  try {
+    data = await res.clone().json()
+  } catch {
+    // not JSON? no-op
+  }
+
+  if (!res.ok) {
+    // if the response is an object of arrays, e.g. { email: ["invalid"], password: ["too short"] }
+    if (typeof data === 'object' && data !== null) {
+      const parts: string[] = []
+      for (const key of Object.keys(data)) {
+        const val = data[key]
+        if (Array.isArray(val)) {
+          parts.push(`${key}: ${val.join(' ')}`)
+        } else if (typeof val === 'string') {
+          parts.push(`${key}: ${val}`)
+        }
+      }
+      if (parts.length) {
+        throw new Error(parts.join(' — '))
+      }
+    }
+
+    // fallback to detail or generic statusText
+    const detail = data.detail || data.error || res.statusText || `HTTP ${res.status}`
+    throw new Error(detail)
+  }
+
+  // on 2xx just return the parsed JSON
+  return data
 }
 
 /**

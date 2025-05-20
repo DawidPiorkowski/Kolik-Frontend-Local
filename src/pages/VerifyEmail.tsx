@@ -1,12 +1,15 @@
 // src/pages/VerifyEmail.tsx
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { verifyEmail } from '../services/api'
 import { Spinner } from '../components/Spinner'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function VerifyEmail() {
   const { token } = useParams<{ token: string }>()
   const navigate = useNavigate()
+  const { logout } = useAuth()
+
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -17,17 +20,25 @@ export default function VerifyEmail() {
       setLoading(false)
       return
     }
-    verifyEmail(token)
-      .then((data) => {
+
+    ;(async () => {
+      try {
+        // 1) Hit the verify-email endpoint
+        const data = await verifyEmail(token)
         setMessage(data.message || 'Your email has been verified!')
-        // After a short pause, send them to login
+
+        // 2) Clear any existing auth state
+        await logout()
+
+      } catch (err: any) {
+        setError(err.message || 'Verification failed.')
+      } finally {
+        setLoading(false)
+        // 3) Redirect to login after a short pause
         setTimeout(() => navigate('/login', { replace: true }), 3000)
-      })
-      .catch((err: any) => {
-        setError(err.message)
-      })
-      .finally(() => setLoading(false))
-  }, [token, navigate])
+      }
+    })()
+  }, [token, logout, navigate])
 
   if (loading) return <Spinner />
 

@@ -1,6 +1,6 @@
 // src/pages/Home.tsx
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import Sidebar from "../components/Sidebar"
 import Modal from "../components/Modal"
 
@@ -91,7 +91,16 @@ export default function Home() {
           <div>
             <h2 className="font-semibold">Step 1: Register ✅</h2>
             <ul className="list-decimal list-inside ml-4 space-y-1">
-              <li>Go to the registration page.</li>
+             <li>
+               Go to the{" "}
+               <Link
+                 to="/register"
+                 className="text-blue-600 underline hover:text-blue-700"
+               >
+                 registration
+               </Link>{" "}
+               page.
+             </li>
               <li>Fill in your name, email address, and password.</li>
               <li>Agree to the Terms and Privacy Policy.</li>
               <li>Click “Register.”</li>
