@@ -300,8 +300,14 @@ export async function confirmEmailChange({
 
 /** Begin MFA setup: returns { secret, qr_code } */
 export async function getMfaSetup() {
+  const csrf = await fetchCsrfToken() 
   const res = await fetch(`${API_BASE}/auth/mfa/setup/`, {
+    method: 'GET',
     credentials: 'include',
+    headers: {
+      'X-CSRFToken': csrf,
+      'Accept': 'application/json',
+    },
   })
   if (!res.ok) await handleError(res)
   return res.json() as Promise<{ secret: string; qr_code: string }>

@@ -2,9 +2,10 @@
 
 /**
  * Base URL for all API requests.
+ * export const API_BASE = 'https://kolik.onrender.com/api'
  */
-export const API_BASE = 'http://localhost:8000/api'
 
+export const API_BASE = '/api'; 
 /**
  * Universal error handler for fetch responses.
  * Throws so callers can catch and display a user‐friendly message.
@@ -32,10 +33,14 @@ export async function fetchCsrfToken(): Promise<string> {
     method: 'GET',
     credentials: 'include',
     headers: { 'Accept': 'application/json' },
-  })
-  if (!res.ok) throw new Error('Could not fetch CSRF token')
+  });
 
-  const token = getCookie('csrftoken')
-  if (!token) throw new Error('CSRF cookie not found')
-  return token
+  if (!res.ok) throw new Error('Could not fetch CSRF token');
+
+  // ✅ wait a microtask to let the browser set the cookie
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  const token = getCookie('csrftoken');
+  if (!token) throw new Error('CSRF cookie not found');
+  return token;
 }
