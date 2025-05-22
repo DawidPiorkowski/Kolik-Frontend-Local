@@ -24,7 +24,7 @@ export default function Home() {
             Kolik helps you find the cheapest basket across Billa, Tesco and Albert.
           </p>
           <button
-            onClick={() => navigate("/search")}
+            onClick={() => navigate("/categories")}
             className="px-6 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700"
           >
             Start Comparing
@@ -91,16 +91,16 @@ export default function Home() {
           <div>
             <h2 className="font-semibold">Step 1: Register ✅</h2>
             <ul className="list-decimal list-inside ml-4 space-y-1">
-             <li>
-               Go to the{" "}
-               <Link
-                 to="/register"
-                 className="text-blue-600 underline hover:text-blue-700"
-               >
-                 registration
-               </Link>{" "}
-               page.
-             </li>
+              <li>
+                Go to the{" "}
+                <Link
+                  to="/register"
+                  className="text-blue-600 underline hover:text-blue-700"
+                >
+                  registration
+                </Link>{" "}
+                page.
+              </li>
               <li>Fill in your name, email address, and password.</li>
               <li>Agree to the Terms and Privacy Policy.</li>
               <li>Click “Register.”</li>

@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -14,15 +13,13 @@ import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import ShoppingList from './pages/ShoppingList';
 import ProtectedTest from './pages/ProtectedTest';
-
-// Profile
 import AccountSettings from './pages/AccountSettings';
 import ChangePassword from './pages/ChangePassword';
 import ChangeEmail from './pages/ChangeEmail';
 import ConfirmEmail from './pages/ConfirmEmail';
-
-// Contact
-import Contact from './pages/contact'; // 👈 NEW Contact page
+import Contact from './pages/contact';
+import Categories from './pages/Categories';
+import Compare from './pages/Compare';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
@@ -34,7 +31,7 @@ export default function App() {
       <Navbar />
       <Layout>
         <Routes>
-          {/* ── PUBLIC ROUTES ── */}
+          {/* public */}
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
@@ -43,75 +40,19 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/mfa-setup" element={<MfaSetup />} />
           <Route path="/mfa-login" element={<MfaLogin />} />
-          <Route path="/contact" element={<Contact />} /> {/* 👈 ADDED ROUTE */}
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/compare/:category" element={<Compare />} />
 
-          {/* ── PROTECTED ROUTES ── */}
-          <Route
-            path="/products"
-            element={
-              <ProtectedRoute>
-                <Products />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/products/:id"
-            element={
-              <ProtectedRoute>
-                <ProductDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/shopping-list"
-            element={
-              <ProtectedRoute>
-                <ShoppingList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/protected"
-            element={
-              <ProtectedRoute>
-                <ProtectedTest />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* ── ACCOUNT SETTINGS FLOW ── */}
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute>
-                <AccountSettings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/account/change-password"
-            element={
-              <ProtectedRoute>
-                <ChangePassword />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/account/change-email"
-            element={
-              <ProtectedRoute>
-                <ChangeEmail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/account/confirm-email-change/:token"
-            element={
-              <ProtectedRoute>
-                <ConfirmEmail />
-              </ProtectedRoute>
-            }
-          />
+          {/* protected */}
+          <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+          <Route path="/products/:id" element={<ProtectedRoute><ProductDetail /></ProtectedRoute>} />
+          <Route path="/shopping-list" element={<ProtectedRoute><ShoppingList /></ProtectedRoute>} />
+          <Route path="/protected" element={<ProtectedRoute><ProtectedTest /></ProtectedRoute>} />
+          <Route path="/account" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
+          <Route path="/account/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+          <Route path="/account/change-email" element={<ProtectedRoute><ChangeEmail /></ProtectedRoute>} />
+          <Route path="/account/confirm-email-change/:token" element={<ProtectedRoute><ConfirmEmail /></ProtectedRoute>} />
         </Routes>
       </Layout>
     </>
