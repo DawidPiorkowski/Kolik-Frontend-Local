@@ -136,7 +136,7 @@ export default function ProductDetail() {
       {bestDeal && (
         <div className="p-3 mb-4 bg-green-100 rounded">
           <strong>Cheapest:</strong>{' '}
-          €{Number(bestDeal.price).toFixed(2)} at{' '}
+          Kč{Number(bestDeal.price).toFixed(2)} at{' '}
           {bestDeal.supermarket}
         </div>
       )}
