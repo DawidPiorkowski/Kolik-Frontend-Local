@@ -3,7 +3,7 @@
 /**
  * Base URL for all API requests.
  */
-export const API_BASE = 'http://localhost:8000/api'
+export const API_BASE = 'http://localhost:8000/api';
 
 /**
  * Universal error handler for fetch responses.
@@ -32,7 +32,8 @@ export async function fetchCsrfToken(): Promise<string> {
     method: 'GET',
     credentials: 'include',
     headers: { 'Accept': 'application/json' },
-  })
+  });
+
   if (!res.ok) throw new Error('Could not fetch CSRF token')
 
   const token = getCookie('csrftoken')

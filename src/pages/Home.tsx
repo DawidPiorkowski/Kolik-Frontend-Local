@@ -24,7 +24,7 @@ export default function Home() {
             Kolik helps you find the cheapest basket across Billa, Tesco and Albert.
           </p>
           <button
-            onClick={() => navigate("/search")}
+            onClick={() => navigate("/products")}
             className="px-6 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700"
           >
             Start Comparing

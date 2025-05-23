@@ -46,10 +46,10 @@ export default function App() {
             path="/products"
             element={<ProtectedRoute><Products /></ProtectedRoute>}
           />
+          
           <Route
-            path="/products/:id"
-            element={<ProtectedRoute><ProductDetail /></ProtectedRoute>}
-          />
+            path="/products/:id" element={<ProductDetail/>} />
+
           <Route
             path="/shopping-list"
             element={<ProtectedRoute><ShoppingList /></ProtectedRoute>}

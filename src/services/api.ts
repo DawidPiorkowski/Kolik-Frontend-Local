@@ -126,17 +126,20 @@ export async function verifyEmail(token: string) {
  * Returns JSON flags (e.g. mfa_setup_required, mfa_required).
  */
 export async function login(email: string, password: string) {
-  const csrfToken = await fetchCsrfToken()
+  
   const res = await fetch(`${API_BASE}/auth/login/`, {
     method: 'POST',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken,
+      //'X-CSRFToken': csrfToken,
     },
     body: JSON.stringify({ email, password }),
   })
-  if (!res.ok) await handleError(res)
+  if (!res.ok) await handleError(res);
+
+  const csrfToken = await fetchCsrfToken();
+
   return parseJsonIfAny(res)
 }
 
@@ -171,6 +174,8 @@ export async function getProfile() {
 export async function updateProfile(data: { name: string })
 {
    // 1) ensure we have a fresh CSRF cookie & token
+
+
    const csrf = await fetchCsrfToken()
 
    // 2) PATCH only the fields you send
