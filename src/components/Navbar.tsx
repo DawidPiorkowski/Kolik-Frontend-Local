@@ -10,58 +10,64 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout()
-       navigate('/login', {
-     replace: true,
-     state: { infoMessage: '👋 You’ve been logged out. Thank you for visiting Kolik today!' }
-   })
-
+    navigate('/login', {
+      replace: true,
+      state: {
+        infoMessage:
+          '👋 You’ve been logged out. Thank you for visiting Kolik today!',
+      },
+    })
   }
 
   return (
-    <nav className="bg-white border-b p-4 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold">
-        Kolik
-      </Link>
+    <nav className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-extrabold tracking-tight">
+          Kolik
+        </Link>
 
-      <div className="flex items-center space-x-4">
-        {user ? (
-          <>
-            {/* Shopping Cart Icon Link */}
-            <Link
-              to="/shopping-list"
-              className="relative text-gray-600 hover:text-gray-800"
-              aria-label="Your shopping list"
-            >
-              <ShoppingCartIcon className="h-6 w-6" />
-            </Link>
+        {/* Right side */}
+        <div className="flex items-center space-x-6">
+          {user ? (
+            <>
+              {/* Cart icon (no badge) */}
+              <Link
+                to="/shopping-list"
+                className="p-1 hover:text-blue-200"
+                aria-label="Your shopping list"
+              >
+                <ShoppingCartIcon className="h-6 w-6" />
+              </Link>
 
-            <span className="text-sm font-semibold text-gray-800">
-              Hi, {user.name}
-            </span>
+              {/* Greeting */}
+              <span className="text-sm font-medium">Hi, {user.name}</span>
 
-            <button
-              onClick={handleLogout}
-              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-            >
-              Log out
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="text-sm text-gray-600 hover:text-gray-800"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/register"
-              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-            >
-              Register
-            </Link>
-          </>
-        )}
+              {/* Logout (ghost button) */}
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1 border border-white rounded hover:bg-white hover:text-blue-600 transition"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-medium hover:text-blue-200"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                className="px-3 py-1 bg-white text-blue-600 rounded hover:bg-blue-50 transition text-sm font-medium"
+              >
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   )

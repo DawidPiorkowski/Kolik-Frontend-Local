@@ -1,12 +1,7 @@
 // src/components/Sidebar.tsx
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {
-  FaHome,
-  FaUserPlus,
-  FaUserCog,
-  FaEnvelope,
-} from 'react-icons/fa'
+import { FaHome, FaUserPlus, FaUserCog, FaEnvelope } from 'react-icons/fa'
 import { useAuth } from '../contexts/AuthContext'
 
 interface SidebarProps {
@@ -17,46 +12,46 @@ const Sidebar: React.FC<SidebarProps> = ({ onHowToClick }) => {
   const { user } = useAuth()
 
   return (
-    <aside className="w-64 h-screen bg-white border-r p-6">
-      <nav className="flex flex-col">
-        <Link
-          to="/"
-          className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
-        >
-          <FaHome className="mr-3 w-7 h-7" />
-          Home
-        </Link>
-
-        {/* Only show this when NOT logged in */}
-        {!user && (
-          <button
-            onClick={onHowToClick}
-            className="flex items-center text-2xl font-medium py-3 hover:text-blue-600 text-left focus:outline-none"
-          >
-            <FaUserPlus className="mr-3 w-7 h-7" />
-            How to Create Your Account
-          </button>
-        )}
-
-        {/* Only show settings when logged in */}
-        {user && (
+      <aside className="sticky top-0 w-56 h-screen bg-indigo-900 text-indigo-100 flex-shrink-0">
+      <div className="p-6 flex flex-col h-full justify-between">
+        <nav className="space-y-4">
           <Link
-            to="/account"
-            className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
+            to="/"
+            className="flex items-center text-lg font-semibold p-2 rounded hover:bg-indigo-800 transition"
           >
-            <FaUserCog className="mr-3 w-7 h-7" />
-            Your Account Settings
+            <FaHome className="mr-3 w-5 h-5" />
+            Home
           </Link>
-        )}
 
-        <Link
-          to="/contact"
-          className="flex items-center text-2xl font-medium py-3 hover:text-blue-600"
-        >
-          <FaEnvelope className="mr-3 w-7 h-7" />
-          Contact Us
-        </Link>
-      </nav>
+          {!user && (
+            <button
+              onClick={onHowToClick}
+              className="flex items-center w-full text-left text-lg font-semibold p-2 rounded hover:bg-indigo-800 transition focus:outline-none"
+            >
+              <FaUserPlus className="mr-3 w-5 h-5" />
+              How to Sign Up
+            </button>
+          )}
+
+          {user && (
+            <Link
+              to="/account"
+              className="flex items-center text-lg font-semibold p-2 rounded hover:bg-indigo-800 transition"
+            >
+              <FaUserCog className="mr-3 w-5 h-5" />
+              Account Settings
+            </Link>
+          )}
+
+          <Link
+            to="/contact"
+            className="flex items-center text-lg font-semibold p-2 rounded hover:bg-indigo-800 transition"
+          >
+            <FaEnvelope className="mr-3 w-5 h-5" />
+            Contact Us
+          </Link>
+        </nav>
+      </div>
     </aside>
   )
 }
