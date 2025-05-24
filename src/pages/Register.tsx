@@ -2,6 +2,7 @@
 import { useState, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { register as apiRegister } from '../services/api'
+import { Link } from 'react-router-dom'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -116,7 +117,7 @@ export default function Register() {
         {/* Terms & Submit */}
         <p className="text-sm text-gray-600">
           By signing up, you agree to our{' '}
-          <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a> and{' '}
+          <a href="/terms" className="text-blue-600 hover:underline">Terms And Conditions</a> and{' '}
           <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a>.
         </p>
 

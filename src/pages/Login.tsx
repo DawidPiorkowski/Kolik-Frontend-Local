@@ -1,11 +1,19 @@
 // src/pages/Login.tsx
 import { useState, FormEvent } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useLocation } from 'react-router-dom'
+
+type LocationState = {
+  infoMessage?: string
+}
 
 export default function Login() {
   const { login, loading, error } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const location = useLocation()
+  const state = location.state as LocationState
+  const infoMessage = state?.infoMessage
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -15,6 +23,13 @@ export default function Login() {
   return (
     <div className="max-w-md mx-auto mt-20 p-6 border rounded shadow">
       <h1 className="text-2xl font-bold mb-4 text-center">Log In to Kolik</h1>
+
+      {/* ← Show this only if we landed here from logout */}
+      {infoMessage && (
+        <div className="bg-green-100 text-green-700 p-2 rounded mb-4">
+          {infoMessage}
+        </div>
+      )}
 
       {error && (
         <div className="bg-red-100 text-red-700 p-2 rounded mb-4">

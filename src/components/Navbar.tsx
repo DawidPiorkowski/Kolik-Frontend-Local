@@ -1,6 +1,7 @@
 // src/components/Navbar.tsx
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function Navbar() {
@@ -9,7 +10,11 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await logout()
-    navigate('/login', { replace: true })
+       navigate('/login', {
+     replace: true,
+     state: { infoMessage: '👋 You’ve been logged out. Thank you for visiting Kolik today!' }
+   })
+
   }
 
   return (
@@ -21,12 +26,19 @@ export default function Navbar() {
       <div className="flex items-center space-x-4">
         {user ? (
           <>
-            {/* Plain bold greeting, no background */}
+            {/* Shopping Cart Icon Link */}
+            <Link
+              to="/shopping-list"
+              className="relative text-gray-600 hover:text-gray-800"
+              aria-label="Your shopping list"
+            >
+              <ShoppingCartIcon className="h-6 w-6" />
+            </Link>
+
             <span className="text-sm font-semibold text-gray-800">
               Hi, {user.name}
             </span>
 
-            {/* Your blue logout button unchanged */}
             <button
               onClick={handleLogout}
               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"

@@ -33,27 +33,47 @@ export default function Home() {
 
         {/* LOGOS */}
         <section className="flex flex-wrap justify-center items-center gap-8 pt-6">
-          <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+          {/* Billa */}
+          <a
+            href="https://www.billa.cz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded hover:shadow-md transition"
+          >
             <img
               src="/logos/billalogo.png"
               alt="Billa"
               className="h-full object-contain scale-[1.4]"
             />
-          </div>
-          <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+          </a>
+
+          {/* Tesco */}
+          <a
+            href="https://www.itesco.cz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded hover:shadow-md transition"
+          >
             <img
               src="/logos/tesco logo.jpeg"
               alt="Tesco"
               className="h-full object-contain scale-[1.6]"
             />
-          </div>
-          <div className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded">
+          </a>
+
+          {/* Albert */}
+          <a
+            href="https://www.albert.cz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-20 w-40 flex items-center justify-center bg-white p-2 rounded hover:shadow-md transition"
+          >
             <img
               src="/logos/Albert_Logo.png"
               alt="Albert"
               className="h-full object-contain scale-[0.9]"
             />
-          </div>
+          </a>
         </section>
 
         {/* HOW IT WORKS */}

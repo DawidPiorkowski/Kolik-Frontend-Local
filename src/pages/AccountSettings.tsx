@@ -100,12 +100,12 @@ const AccountSettings: React.FC = () => {
         >
           Change Password
         </Link>
-        <Link
+        {/* <Link
           to="/account/change-email"
           className="block text-blue-600 hover:underline"
         >
           Change Email
-        </Link>
+        </Link> */}
       </div>
     </div>
   )
