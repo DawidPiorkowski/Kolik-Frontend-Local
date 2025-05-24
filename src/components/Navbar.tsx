@@ -2,7 +2,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-
+import { ShoppingCart } from 'lucide-react'
 export default function Navbar() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
@@ -17,16 +17,25 @@ export default function Navbar() {
       <Link to="/" className="text-xl font-bold">
         Kolik
       </Link>
-
+  
       <div className="flex items-center space-x-4">
         {user ? (
           <>
-            {/* Plain bold greeting, no background */}
+            {/* 🛒 Basket Link */}
+            <Link
+              to="/shopping-list"
+              className="text-sm text-gray-700 hover:text-blue-600 flex items-center gap-1"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              Basket
+            </Link>
+  
+            {/* 👋 Greeting */}
             <span className="text-sm font-semibold text-gray-800">
               Hi, {user.name}
             </span>
-
-            {/* Your blue logout button unchanged */}
+  
+            {/* 🔒 Logout */}
             <button
               onClick={handleLogout}
               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
@@ -52,5 +61,4 @@ export default function Navbar() {
         )}
       </div>
     </nav>
-  )
-}
+  )}

@@ -491,11 +491,17 @@ export async function getMixedBasket() {
 }
 
 /** Price breakdown by supermarket */
-export async function getSupermarketBreakdown() {
-  const res = await fetch(
-    `${API_BASE}/shopping-list/supermarket-breakdown/`,
-    { credentials: 'include' }
-  )
+export async function getSupermarketBreakdown(supermarket: string) {
+  const csrf = await fetchCsrfToken()
+  const res = await fetch(`${API_BASE}/shopping-list/supermarket-breakdown/`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrf,
+    },
+    body: JSON.stringify({ supermarket }),
+  })
   if (!res.ok) await handleError(res)
   return res.json()
 }
