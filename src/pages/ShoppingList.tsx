@@ -24,22 +24,41 @@ function getProductImage(variant: string): string | null {
     'Rohlík tukový': '/logos/rohliktukovy.png',
     'Tesco Toustový chléb světlý': '/logos/tescotoast.png',
     'BILLA Toustový chléb světlý': '/logos/billatoast.png',
-    'Penam Toustový chléb světlý at Albert': '/logos/penamalbert.png',
+    'Penam Toustový chléb světlý': '/logos/penamalbert.png',
     'Albert Toustový chléb světlý, balený at Albert': '/logos/albertsvetlytoast.png',
-    'Penam Toust světlý at Tesco ': '/logos/penamalbert.png',
-    'Ölz Pšeničný toustový chléb at Tesco': '/logos/olz.png',
-    'Tesco Toustový chléb máslový at Tesco': '/logos/toastmaslovy.png',
-    'Baker Street – Toustový chléb at Billa': '/logos/bakerstreet.png',
-    'Ölz Pšeničný toustový chléb at Billa': '/logos/olz.png',
+    'Penam Toust světlý': '/logos/penamalbert.png',
+    'Ölz Pšeničný toustový chléb': '/logos/olz.png',
+    'Tesco Toustový chléb máslový': '/logos/toastmaslovy.png',
+    'Baker Street – Toustový chléb': '/logos/bakerstreet.png',
     'Billa Toustový chléb světlý, balený at Billa': '/logos/billatoast.png',
-    'BILLA Toustový chléb máslový at Billa': '/logos/billatoastmaslovy.png',
-    'Bon Via Bio Okurka at Billa': '/logos/bonvia.png',
-
-
-
-
-
-  }
+    'BILLA Toustový chléb máslový': '/logos/billatoastmaslovy.png',
+    'Bon Via Bio Okurka': '/logos/bonvia.png',
+    'Rohlík': '/logos/rohliktukovy.png',
+    'Česká farma okurka salátová': '/logos/ceskafarma.png',
+    'Bio Okurka Nature Promise': '/logos/np.png',
+    'Okurka hadovka': '/logos/okurkabilla.png',
+    'Rohlík staročeský': '/logos/rohliktukovy.png',
+    'Podestýlková vejce Srdce domova M': '/logos/billasd.png',
+    'Albert Vejce z podestýlky, vel. M': '/logos/albertvejce.png',
+    'Čerstvá vejce od Kunína podestýlková M': '/logos/kunin.png',
+    'Milkpol máslo 82%': '/logos/milkpolbutter.png',
+    'President Máslo Plaquette jemné': '/logos/president.png',
+    'Tatra Máslo': '/logos/tatramaslo.png',
+    'Tatra máslo 82%': '/logos/tatramaslo.png',
+    'Česká chuť Máslo': '/logos/ceskachut.png',
+    'Tesco Máslo 82% tuku': '/logos/tescomaslo.png',
+    'Srdce Domova České Máslo 84%': '/logos/sdmaslo.png',
+    'Moravia máslo': '/logos/moravia.png',
+    'Máslo': '/logos/maslo.png',
+    'Milkpol máslo': '/logos/milkpolbutter.png',
+    'Madeta Jihočeské máslo nedělní': '/logos/nedela.png',
+    'Tatra Mléko plnotučné trvanlivé': '/logos/tatramleko.png',
+    'Čerstvé mléko sel.kunín 3,8%': '/logos/tatraselske.png',
+    'Olma Bio čerstvé mléko': '/logos/olmabio.png',
+    'Olma Selské mléko plnotučné čerstvé': '/logos/olmaselske.png',
+    'Nature Promise Bio Mléko plnotučné čerstvé': '/logos/npmleko.png',
+    'Česká chuť Bio mléko čerstvé plnotučné': '/logos/BIO.png',
+    }
   return map[variant] || null
 }
 
@@ -54,7 +73,6 @@ function getSupermarketLogo(name: string): string | null {
 
 function getProductIcon(name: string): string {
   const map: { [key: string]: string } = {
-    'Okurka': '🥒',
     'Butter': '🧈',
     'Whole milk': '🥛',
     'Eggs': '🥚',
