@@ -126,21 +126,23 @@ export async function verifyEmail(token: string) {
  * Returns JSON flags (e.g. mfa_setup_required, mfa_required).
  */
 export async function login(email: string, password: string) {
-  
+  // Step 1: Get CSRF token
+  const csrf = await fetchCsrfToken();
+
+  // Step 2: Send login request with CSRF header
   const res = await fetch(`${API_BASE}/auth/login/`, {
     method: 'POST',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      //'X-CSRFToken': csrfToken,
+      'X-CSRFToken': csrf, // REQUIRED
     },
     body: JSON.stringify({ email, password }),
-  })
+  });
+
   if (!res.ok) await handleError(res);
 
-  const csrfToken = await fetchCsrfToken();
-
-  return parseJsonIfAny(res)
+  return parseJsonIfAny(res);
 }
 
 /**
