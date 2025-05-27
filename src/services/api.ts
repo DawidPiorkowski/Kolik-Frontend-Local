@@ -517,11 +517,3 @@ export async function calculateBasket() {
   return res.json()
 }
 
-/** Fetch the original basket (exact products user selected) */
-export async function getOriginalBasketSummary() {
-  const res = await fetch(`${API_BASE}/shopping-list/original-basket/`, {
-    credentials: 'include',
-  })
-  if (!res.ok) await handleError(res)
-  return res.json()
-}
