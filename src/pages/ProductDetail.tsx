@@ -135,7 +135,7 @@ export default function ProductDetail() {
   if (!product) return <div className="p-4">Product not found.</div>
 
   return (
-    <div className="max-w-md mx-auto mt-8 bg-white rounded-xl shadow p-6 space-y-4 border border-gray-200">
+    <div className="max-w-md mx-auto mt-8 bg-gray-50 rounded-xl shadow p-6 space-y-4 border border-gray-200">
 
       {/* Back Button */}
       <button
