@@ -5,6 +5,7 @@ import {
   listAllProducts,
   searchProducts,
   getProductsByCategory,
+  addToShoppingList,
 } from '../services/api';
 import { Spinner } from '../components/Spinner';
 
@@ -79,6 +80,18 @@ function useProducts(searchTerm: string, categoryId: number | null) {
 // Reusable product card component
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const image = getProductImage(product.name);
+  const [quantity, setQuantity] = useState(1);
+  const [success, setSuccess] = useState(false);
+
+  const handleAdd = async () => {
+    try {
+      await addToShoppingList({ product_id: product.id, quantity });
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 2000);
+    } catch {
+      alert('Failed to add product.');
+    }
+  };
 
   return (
     <div className="border p-4 rounded shadow-sm flex flex-col items-center text-center bg-gray-50 hover:shadow-md hover:-translate-y-1 transition-all duration-200">
@@ -91,16 +104,28 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       )}
       <h2 className="font-medium text-lg mb-1">{product.name}</h2>
       <p className="text-sm text-gray-600 mb-2">
-        {product.amount} {product.unit} &middot; <em>{product.category_name}</em>
+        {product.amount} {product.unit} • <em>{product.category_name}</em>
       </p>
-      <div className="mt-auto">
-        <Link
-          to={`/products/${product.id}`}
-          className="text-blue-600 hover:underline font-medium text-sm"
+
+      <div className="flex items-center justify-center gap-2 mt-auto">
+        <input
+          type="number"
+          min={1}
+          value={quantity}
+          onChange={(e) => setQuantity(Math.max(1, +e.target.value || 1))}
+          className="w-16 px-2 py-1 border rounded text-center"
+        />
+        <button
+          onClick={handleAdd}
+          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-2 rounded shadow transition"
         >
-          View Details
-        </Link>
+          Add
+        </button>
       </div>
+
+      {success && (
+        <div className="text-green-600 text-sm mt-2">Added to cart!</div>
+      )}
     </div>
   );
 };
