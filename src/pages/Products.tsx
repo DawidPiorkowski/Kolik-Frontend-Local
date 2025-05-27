@@ -21,6 +21,17 @@ interface Product {
   category_name: string;    // e.g. "Dairy"
 }
 
+function getProductImage(name: string): string | null {
+  const map: { [key: string]: string } = {
+    'Whole milk': '/logos/milkicon.png',
+    'Butter': '/logos/buttericon.png',
+    'Eggs size M': '/logos/eggicon.png',
+    'Toast bread white': '/logos/toasticon.png',
+    'Cucumber': '/logos/cucumbericon.png',
+    'Rohlik': '/logos/rohlikicon.png',
+  };
+  return map[name] || null;
+}
 // Custom hook to encapsulate product fetching logic
 function useProducts(searchTerm: string, categoryId: number | null) {
   const [products, setProducts] = useState<Product[]>([]);
@@ -66,19 +77,33 @@ function useProducts(searchTerm: string, categoryId: number | null) {
 }
 
 // Reusable product card component
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
-  <div className="border p-4 rounded shadow-sm flex flex-col">
-    <h2 className="font-medium text-lg mb-1">{product.name}</h2>
-    <p className="text-sm text-gray-600 mb-2">
-      {product.amount} {product.unit} &middot; <em>{product.category_name}</em>
-    </p>
-    <div className="mt-auto">
-      <Link to={`/products/${product.id}`} className="text-blue-600 hover:underline">
-        View Details
-      </Link>
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+  const image = getProductImage(product.name);
+
+  return (
+    <div className="border p-4 rounded shadow-sm flex flex-col items-center text-center bg-gray-50 hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+      {image && (
+        <img
+          src={image}
+          alt={product.name}
+          className="w-16 h-16 mb-3 object-contain"
+        />
+      )}
+      <h2 className="font-medium text-lg mb-1">{product.name}</h2>
+      <p className="text-sm text-gray-600 mb-2">
+        {product.amount} {product.unit} &middot; <em>{product.category_name}</em>
+      </p>
+      <div className="mt-auto">
+        <Link
+          to={`/products/${product.id}`}
+          className="text-blue-600 hover:underline font-medium text-sm"
+        >
+          View Details
+        </Link>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Main products page
 const ProductsPage: React.FC = () => {
@@ -115,32 +140,39 @@ const ProductsPage: React.FC = () => {
       <h1 className="text-2xl font-semibold mb-4">Products</h1>
 
       {/* Search */}
-      <form onSubmit={handleSearch} className="mb-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          placeholder="Search products..."
-          className="border rounded px-2 py-1 w-64"
-        />
-        <button type="submit" className="ml-2 px-3 py-1 border rounded hover:bg-gray-100">
-          Search
-        </button>
-      </form>
+      <form onSubmit={handleSearch} className="mb-6 flex items-center gap-2">
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={e => setSearchTerm(e.target.value)}
+    placeholder=" Search products..."
+    className="px-4 py-2 w-full max-w-md rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+  />
+  <button
+    type="submit"
+    className="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition"
+  >
+    Search
+  </button>
+</form>
 
       {/* Categories */}
-      <div className="flex gap-2 overflow-x-auto mb-4">
-        {categories.map(cat => (
-          <button
-            key={cat.id}
-            onClick={() => handleCategorySelect(cat.id)}
-            className={`px-3 py-1 rounded-full border transition-colors
-              ${selectedCategory === cat.id ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'}`}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
+      <div className="flex flex-wrap gap-2 mb-6">
+  {categories.map(cat => (
+    <button
+      key={cat.id}
+      onClick={() => handleCategorySelect(cat.id)}
+      className={`px-4 py-2 text-sm rounded-full font-medium shadow-sm border transition
+        ${
+          selectedCategory === cat.id
+            ? 'bg-blue-600 text-white border-blue-600'
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+        }`}
+    >
+      {cat.name}
+    </button>
+  ))}
+</div>
 
       {/* Products Grid */}
       {loading ? (
