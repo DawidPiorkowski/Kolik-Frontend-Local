@@ -516,3 +516,4 @@ export async function calculateBasket() {
   if (!res.ok) await handleError(res)
   return res.json()
 }
+

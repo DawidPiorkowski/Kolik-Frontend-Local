@@ -9,6 +9,20 @@ import {
 } from '../services/api'
 import { Spinner } from '../components/Spinner'
 
+// ========== Image Mapping Helper ==========
+function getProductImage(name: string): string | null {
+  const map: { [key: string]: string } = {
+    'Whole milk': '/logos/milkicon.png',
+    'Butter': '/logos/buttericon.png',
+    'Eggs size M': '/logos/eggicon.png',
+    'Toast bread white': '/logos/toasticon.png',
+    'Cucumber': '/logos/cucumbericon.png',
+    'Rohlik': '/logos/rohlikicon.png',
+  }
+  return map[name] || null
+}
+
+// ========== Interfaces ==========
 interface ProductDetailResponse {
   id: number
   name: string
@@ -36,6 +50,7 @@ interface BestDealResponse {
   best_variant: Variant
 }
 
+// ========== Component ==========
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -66,14 +81,11 @@ export default function ProductDetail() {
         if (cancelled) return
 
         setProduct(prodResp)
-        setBestDeal(bestResp.best_variant)
 
-        // 1) sort cheapest → expensive
         const sorted = allVarsResp.variants
           .slice()
           .sort((a: Variant, b: Variant) => Number(a.price) - Number(b.price))
 
-        // 2) dedupe by supermarket, taking cheapest per market
         const seen = new Set<string>()
         const unique = sorted.filter((v: Variant) => {
           if (seen.has(v.supermarket)) return false
@@ -82,19 +94,15 @@ export default function ProductDetail() {
         })
 
         setVariants(unique)
+        setBestDeal(bestResp.best_variant)
 
-        // 3) default-select first
-        if (unique.length > 0) {
-          setSelectedVariant(unique[0].id)
+        if (bestResp.best_variant) {
+          setSelectedVariant(bestResp.best_variant.id)
         }
       } catch (err: any) {
-        if (!cancelled) {
-          setError(err.message || 'Failed to load product')
-        }
+        if (!cancelled) setError(err.message || 'Failed to load product')
       } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
+        if (!cancelled) setLoading(false)
       }
     }
 
@@ -127,30 +135,50 @@ export default function ProductDetail() {
   if (!product) return <div className="p-4">Product not found.</div>
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-      {product.description && (
-        <p className="mb-4 text-gray-700">{product.description}</p>
-      )}
+    <div className="max-w-md mx-auto mt-8 bg-gray-50 rounded-xl shadow p-6 space-y-4 border border-gray-200">
 
-      {bestDeal && (
-        <div className="p-3 mb-4 bg-green-100 rounded">
-          <strong>Cheapest:</strong>{' '}
-          Kč{Number(bestDeal.price).toFixed(2)} at{' '}
-          {bestDeal.supermarket}
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="text-sm text-blue-600 hover:underline"
+      >
+        ← Back to Products
+      </button>
+
+      {/* Product Image */}
+      {getProductImage(product.name) && (
+        <div className="flex justify-center">
+          <img
+            src={getProductImage(product.name)!}
+            alt={product.name}
+            className="w-28 h-28 object-contain mb-2"
+          />
         </div>
       )}
 
-      <div className="mb-4">
+      {/* Title & Description */}
+      <h1 className="text-2xl font-bold text-center">{product.name}</h1>
+      {product.description && (
+        <p className="text-gray-700 text-center">{product.description}</p>
+      )}
+
+      {/* Best Deal */}
+      {bestDeal && (
+        <div className="p-3 bg-green-100 text-green-800 text-sm rounded text-center">
+          <strong>Cheapest:</strong>{' '}
+          Kč{Number(bestDeal.price).toFixed(2)} at {bestDeal.supermarket}
+        </div>
+      )}
+
+      {/* Variant Selection */}
+      <div>
         <h2 className="font-medium mb-2">Choose a supermarket:</h2>
         {variants.map((v) => (
           <label
             key={v.id}
-            className={`flex items-center mb-2 p-2 rounded border transition ${
-              bestDeal && bestDeal.supermarket === v.supermarket && bestDeal.price === v.price
-                ? 'bg-green-50 border-green-400'
-                : 'border-gray-300'
-            }`}
+            className={`flex items-center gap-3 p-3 mb-2 border rounded-lg cursor-pointer transition 
+              ${selectedVariant === v.id ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:bg-gray-50'}
+              ${bestDeal && bestDeal.supermarket === v.supermarket && bestDeal.price === v.price ? 'ring-2 ring-green-400' : ''}`}
           >
             <input
               type="radio"
@@ -158,16 +186,18 @@ export default function ProductDetail() {
               value={v.id}
               checked={selectedVariant === v.id}
               onChange={() => setSelectedVariant(v.id)}
-              className="mr-2"
+              className="accent-blue-500"
             />
-            <span>
-              <strong>{v.supermarket}</strong> — Kč{Number(v.price).toFixed(2)}
-            </span>
+            <div>
+              <strong>{v.supermarket}</strong>
+              <div className="text-sm text-gray-600">Kč{Number(v.price).toFixed(2)}</div>
+            </div>
           </label>
         ))}
       </div>
 
-      <div className="mb-4">
+      {/* Quantity Input */}
+      <div>
         <label htmlFor="quantity" className="font-medium block mb-1">
           Quantity:
         </label>
@@ -177,20 +207,22 @@ export default function ProductDetail() {
           min={1}
           value={quantity}
           onChange={(e) => setQuantity(Math.max(1, +e.target.value || 1))}
-          className="border rounded px-2 py-1 w-24"
+          className="w-20 px-3 py-2 border rounded shadow-sm"
         />
       </div>
 
+      {/* Add Button */}
       <button
         onClick={handleAdd}
         disabled={adding}
-        className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded shadow hover:bg-blue-700 transition disabled:opacity-50"
       >
         {adding ? 'Adding…' : 'Add to List'}
       </button>
 
+      {/* Success Message */}
       {success && (
-        <div className="mt-3 text-green-600">
+        <div className="text-green-600 text-center mt-2">
           Added to your shopping list!
         </div>
       )}
