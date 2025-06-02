@@ -17,6 +17,8 @@ import ProtectedTest         from './pages/ProtectedTest'
 import TermsAndConditions    from './pages/TermsAndConditions'
 import PrivacyPolicy         from './pages/PrivacyPolicy'
 import CookiePolicy          from './pages/CookiePolicy'
+import ContactUs               from './pages/ContactUs';
+
 
 // Profile 
 import AccountSettings       from './pages/AccountSettings'
@@ -40,6 +42,8 @@ export default function App() {
           <Route path="/terms"             element={<TermsAndConditions />} />
           <Route path="/privacy"            element={<PrivacyPolicy />} />
           <Route path="/cookie-policy"     element={<CookiePolicy />} />
+          <Route path="/contact"           element={<ContactUs />} />
+
           
           {/* email verification & password reset */}
           <Route path="/verify-email"      element={<VerifyEmail />} />
