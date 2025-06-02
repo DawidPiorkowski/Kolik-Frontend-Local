@@ -1,3 +1,4 @@
+// src/components/Products.tsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -33,7 +34,8 @@ function getProductImage(name: string): string | null {
   };
   return map[name] || null;
 }
-// Custom hook to encapsulate product fetching logic
+
+// Custom hook to encapsulate product-fetching logic
 function useProducts(searchTerm: string, categoryId: number | null) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
@@ -41,22 +43,27 @@ function useProducts(searchTerm: string, categoryId: number | null) {
 
   useEffect(() => {
     let cancelled = false;
+
     async function load() {
       setLoading(true);
       setError(null);
+
       try {
         let data: Product[];
-        if (searchTerm) {
-          data = await searchProducts(searchTerm);
-        } else if (categoryId) {
+
+        if (searchTerm.trim()) {
+          data = await searchProducts(searchTerm.trim());
+        } else if (categoryId !== null) {
           // API returns { category: string; products: Product[] }
           const resp = await getProductsByCategory(categoryId);
           data = resp.products;
         } else {
           data = await listAllProducts();
         }
+
         if (!cancelled) {
-          setProducts(data);
+          // Always set an array (even if empty)
+          setProducts(Array.isArray(data) ? data : []);
         }
       } catch (err: any) {
         if (!cancelled) {
@@ -68,7 +75,9 @@ function useProducts(searchTerm: string, categoryId: number | null) {
         }
       }
     }
+
     load();
+
     return () => {
       cancelled = true;
     };
@@ -153,11 +162,13 @@ const ProductsPage: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // searchTerm is already updated on input change
+    // no-op: the searchTerm state already updated onChange
   };
 
   const handleCategorySelect = (id: number) => {
     setSelectedCategory(prev => (prev === id ? null : id));
+    // Clear search when switching category
+    setSearchTerm('');
   };
 
   return (
@@ -166,40 +177,40 @@ const ProductsPage: React.FC = () => {
 
       {/* Search */}
       <form onSubmit={handleSearch} className="mb-6 flex items-center gap-2">
-  <input
-    type="text"
-    value={searchTerm}
-    onChange={e => setSearchTerm(e.target.value)}
-    placeholder=" Search products..."
-    className="px-4 py-2 w-full max-w-md rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-  />
-  <button
-    type="submit"
-    className="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition"
-  >
-    Search
-  </button>
-</form>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          placeholder=" Search products..."
+          className="px-4 py-2 w-full max-w-md rounded-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition"
+        >
+          Search
+        </button>
+      </form>
 
       {/* Categories */}
       <div className="flex flex-wrap gap-2 mb-6">
-  {categories.map(cat => (
-    <button
-      key={cat.id}
-      onClick={() => handleCategorySelect(cat.id)}
-      className={`px-4 py-2 text-sm rounded-full font-medium shadow-sm border transition
-        ${
-          selectedCategory === cat.id
-            ? 'bg-blue-600 text-white border-blue-600'
-            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-        }`}
-    >
-      {cat.name}
-    </button>
-  ))}
-</div>
+        {categories.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => handleCategorySelect(cat.id)}
+            className={`px-4 py-2 text-sm rounded-full font-medium shadow-sm border transition
+              ${
+                selectedCategory === cat.id
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+              }`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
 
-      {/* Products Grid */}
+      {/* Products Grid / Empty / Error / Loading */}
       {loading ? (
         <div className="flex justify-center py-10">
           <Spinner />
@@ -211,14 +222,20 @@ const ProductsPage: React.FC = () => {
             Retry
           </button>
         </div>
-      ) : products.length === 0 ? (
-        <p>No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <>
+          {products.length === 0 ? (
+            <div className="py-10 text-center text-gray-600">
+              <p className="text-xl font-medium">No products found.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {products.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
