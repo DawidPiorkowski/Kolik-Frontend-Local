@@ -12,6 +12,7 @@ A modern React + TypeScript frontend for the **Kolik** shopping and price compar
 - [Usage](#usage)
 - [Available Scripts](#available-scripts)
 - [Project Structure](#project-structure)
+- [Collaborators](#collaborators)
 - [License](#license)
 - [Contact](#contact)
 
@@ -95,11 +96,20 @@ kolik-frontend/
 └── vite.config.ts              # Vite build tool configuration
 ```
 
-## 📄 License
+## Collaborators
+### Backend Team:
+- **Agáta Langová** – Backend developer
+- **Nokulunga Motsweni** – Backend developer
+- **Teo Bocev** – Integration & testing
+  
+### Frontend Team:
+- **Dawid Piorkowski** – Frontend developer (React)
+- **Dren Krasniqi** – Design/Support
 
-This project is licensed under the [MIT License](LICENSE).
+## 📄 License
+This project is for academic purposes. All rights reserved by the Kolik team.
 
 ## 📬 Contact
-
 For questions, suggestions, or support, feel free to contact the maintainer:  
 **Maintainer** – [DawidPiorkowski on GitHub](https://github.com/DawidPiorkowski)
+
